@@ -1,5 +1,17 @@
 {% extends 'layout.swig' %}
 
 {% block body %}
-<h1>Media gallery</h1>
+    <h1>Media gallery</h1>
+
+    <ul>
+    {% for media in medias %}
+        <li>
+            <a href="{{ media.normalizedUrl }}" class="fancybox-thumb" rel="fancybox-thumb" title="{{ media.name }}">
+                <img src="{{ media.thumbnailUrl }}" alt="{{ media.name }}"/>
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <script type="text/javascript" src="{{ asset('@website:resources/javascripts/gallery.js') }}"></script>
 {% endblock %}

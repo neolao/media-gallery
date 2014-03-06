@@ -31,6 +31,7 @@ module.exports = {
     static: {
         // The directories to serve
         directories: [
+            __dirname + '/../cache',
             __dirname + '/../medias'
         ]
     },

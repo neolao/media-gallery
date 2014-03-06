@@ -1,0 +1,76 @@
+/**
+ * Apply flexbox
+ */
+@mixin flexbox {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+/**
+ * Apply inline-flex
+ */
+@mixin inline-flex {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -moz-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+}
+
+/**
+ * Flexbox Direction
+ * 
+ * The 'flex-direction' property specifies how flex items are placed in
+ * the flex container, by setting the direction of the flex container's
+ * main axis. This determines the direction that flex items are laid out in. 
+ *
+ * Values: row | row-reverse | column | column-reverse
+ * Default: row
+ *
+ * http://w3.org/tr/css3-flexbox/#flex-direction-property
+ */
+@mixin flex-direction($value: row) {
+    @if $value == row-reverse {
+        -webkit-box-direction: reverse;
+        -webkit-box-orient: horizontal;
+    } @else if $value == column {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: vertical;
+    } @else if $value == column-reverse {
+        -webkit-box-direction: reverse;
+        -webkit-box-orient: vertical;
+    } @else {
+        -webkit-box-direction: normal;
+        -webkit-box-orient: horizontal;
+    }
+    -webkit-flex-direction: $value;
+    -moz-flex-direction: $value;
+    -ms-flex-direction: $value;
+    flex-direction: $value;
+}
+
+
+// Flexbox "Flex" (shorthand)
+//
+// The 'flex' property specifies the components of a flexible length: the
+// flex grow factor and flex shrink factor, and the flex basis. When an
+// element is a flex item, 'flex' is consulted instead of the main size
+// property to determine the main size of the element. If an element is
+// not a flex item, 'flex' has no effect.
+//
+// Values: none | <flex-grow> <flex-shrink> || <flex-basis>
+// Default: See individual properties (1 1 0).
+//
+// http://w3.org/tr/css3-flexbox/#flex-property
+
+@mixin flex($fg: 1, $fs: null, $fb: null) {
+    -webkit-box-flex: $fg;
+    -webkit-flex: $fg $fs $fb;
+    -moz-box-flex: $fg;
+    -moz-flex: $fg $fs $fb;
+    -ms-flex: $fg $fs $fb;
+    flex: $fg $fs $fb;
+}

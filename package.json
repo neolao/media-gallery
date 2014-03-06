@@ -18,7 +18,9 @@
         "solfegejs-server-router": "*",
         "solfegejs-sass"    : "*",
         "solfegejs-assets"  : "*",
-        "solfegejs-swig"    : "*"
+        "solfegejs-swig"    : "*",
+        "mime"              : "1.2.11",
+        "easyimage"         : "0.1.6"
     },
     "devDependencies":
     {

@@ -2,13 +2,27 @@ module.exports = {
     // The destination of the computed files
     destination: {
         type: 'directory',
-        path: __dirname + '/../public'
+        path: __dirname + '/../cache'
     },
 
     // The available files
     files: [
-        '@website:resources/images/**/*'
+        '@website:resources/**/*'
     ],
+
+    // The javascript packages
+    javascripts: {
+        filters: ['combine'],
+
+        default: {
+            files: [
+                '@website:resources/fancybox/jquery-1.8.3.min.js',
+                '@website:resources/fancybox/jquery.fancybox-main.js',
+                '@website:resources/fancybox/jquery.fancybox-thumbs.js'
+            ],
+            baseUrl: '/javascripts/'
+        }
+    },
 
     // The stylesheet packages
     stylesheets: {
