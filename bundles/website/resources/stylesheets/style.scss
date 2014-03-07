@@ -7,7 +7,7 @@ h1 {
 
 ul {
     @include flexbox;
-    flex-flow: row wrap;
+    @include flex-flow(row wrap);
 }
 li {
     border: solid 1px #333;
@@ -17,6 +17,10 @@ li {
     text-align: center;
 
     //@include flex(1, 100px);
+    -webkit-flex: 1 100px;
+    -moz-box-flex: 1 100px;
+    -moz-flex: 1 100px;
+    -ms-flex: 1 100px;
     flex: 1 100px;
 }
 img {

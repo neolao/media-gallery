@@ -52,6 +52,14 @@
     flex-direction: $value;
 }
 
+@mixin flex-flow($values: (row nowrap)) {
+                flex-flow: $values;
+                flex-flow: $values;
+    -webkit-flex-flow: $values;
+    -moz-flex-flow: $values;
+    -ms-flex-flow: $values;
+    flex-flow: $values;
+}
 
 // Flexbox "Flex" (shorthand)
 //
