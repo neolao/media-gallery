@@ -39,14 +39,7 @@ module.exports = {
     // Configuration of the router bundle
     router: {
         // The routes
-        routes: [
-            {
-                id: 'home',
-                url: '/',
-                controller: '@website.controllers.Home',
-                action: 'index'
-            }
-        ]
+        routes: require('./routes')
     },
 
     // Configuration of the swig engine

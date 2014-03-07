@@ -102,9 +102,10 @@ module.exports.createNormalized = function(mediaPath)
     var destinationPath = this.getNormalizedPath(mediaPath);
 
     return function(done) {
-        easyimage.convert({
+        easyimage.resize({
             src: mediaPath,
-            dst: destinationPath
+            dst: destinationPath,
+            width: 800
         }, function(error, result) {
             done(error, destinationPath);
         });
