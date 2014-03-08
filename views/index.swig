@@ -6,7 +6,7 @@
     <ul>
     {% for media in medias %}
         <li>
-            <a href="{{ media.normalizedUrl }}" 
+            <a rel="medias" href="{{ media.normalizedUrl }}" 
                 {% if media.type === 'image' %}
                 class="media-image" 
                 {% elseif media.type === 'video' %}
