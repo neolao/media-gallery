@@ -30,10 +30,7 @@ module.exports = {
     // Configuration of the static bundle
     static: {
         // The directories to serve
-        directories: [
-            __dirname + '/../cache',
-            __dirname + '/../medias'
-        ]
+        directories: []
     },
 
     // Configuration of the router bundle

@@ -54,9 +54,22 @@ proto.index = function*(request, response)
                 // Add to the media list
                 medias.push({
                     name: fileName,
+                    type: 'image',
                     normalizedUrl: '/image/normalized/' + file,
-                    thumbnailUrl: '/thumbnail/' + file
+                    thumbnailUrl: '/image/thumbnail/' + file
                 });
+                break;
+
+            // Videos
+            case 'video/quicktime':
+                medias.push({
+                    name: fileName,
+                    type: 'video',
+                    normalizedUrl: '/video/normalized/' + file,
+                    thumbnailUrl: '/video/thumbnail/' + file
+                });
+                break;
+            default:
         }
     };
 
@@ -68,12 +81,12 @@ proto.index = function*(request, response)
 
 
 /**
- * Serve the thumbnail
+ * Serve the image thumbnail
  *
  * @param   {solfege.bundle.server.Request}     request     The request
  * @param   {solfege.bundle.server.Response}    response    The response
  */
-proto.thumbnail = function*(request, response)
+proto.imageThumbnail = function*(request, response)
 {
     var pathResolve = require('path').resolve;
     var solfege = require('solfegejs');
@@ -147,5 +160,108 @@ proto.imageNormalized = function*(request, response)
     response.statusCode = 200;
     response.body = fs.createReadStream(normalizedPath);
 };
+
+
+/**
+ * Serve the video thumbnail
+ *
+ * @param   {solfege.bundle.server.Request}     request     The request
+ * @param   {solfege.bundle.server.Response}    response    The response
+ */
+proto.videoThumbnail = function*(request, response)
+{
+    var pathResolve = require('path').resolve;
+    var solfege = require('solfegejs');
+
+    var file = decodeURIComponent(request.parameters.file);
+    var filePath = pathResolve(this.mediaDirectory, file);
+
+    // Check if the media exists
+    var fileExists = yield solfege.util.Node.fs.exists(filePath);
+    if (!fileExists) {
+        response.statusCode = 404;
+        return;
+    }
+
+    // Check informations
+    var FileUtil = require('../utils/FileUtil');
+    var isChanged = yield FileUtil.isChanged(filePath);
+
+    // Create the thumbnail if necessary
+    var VideoUtil = require('../utils/VideoUtil');
+    var ImageUtil = require('../utils/ImageUtil');
+    var thumbnailPath = ImageUtil.getThumbnailPath(filePath);
+    var thumbnailExists = yield solfege.util.Node.fs.exists(thumbnailPath);
+    if (isChanged || !thumbnailExists) {
+        var capturePath = yield VideoUtil.createThumbnail(filePath);
+        thumbnailPath = yield ImageUtil.createThumbnail(capturePath);
+    }
+
+    // Serve the file
+    var fs = require('fs');
+    response.statusCode = 200;
+    response.body = fs.createReadStream(thumbnailPath);
+};
+
+
+/**
+ * Serve the normalized video
+ *
+ * @param   {solfege.bundle.server.Request}     request     The request
+ * @param   {solfege.bundle.server.Response}    response    The response
+ */
+proto.videoNormalized = function*(request, response)
+{
+    var pathResolve = require('path').resolve;
+    var solfege = require('solfegejs');
+
+    var file = decodeURIComponent(request.parameters.file);
+    var filePath = pathResolve(this.mediaDirectory, file);
+
+    // Check if the media exists
+    var fileExists = yield solfege.util.Node.fs.exists(filePath);
+    if (!fileExists) {
+        response.statusCode = 404;
+        return;
+    }
+
+    // Check informations
+    var FileUtil = require('../utils/FileUtil');
+    var isChanged = yield FileUtil.isChanged(filePath);
+
+
+
+    // Serve the file
+    var fs = require('fs');
+    response.setHeader('Content-Type', 'video/quicktime');
+    //response.body = fs.createReadStream(filePath);
+
+    var stat = yield solfege.util.Node.fs.stat(filePath);
+    var total = stat.size;
+
+    var range = request.getHeader('range');
+    if (range) {
+        var parts = range.replace(/bytes=/, '').split('-');
+        var partialstart = parts[0];
+        var partialend = parts[1];
+
+        var start = parseInt(partialstart, 10);
+        var end = partialend ? parseInt(partialend, 10) : total-1;
+        var chunksize = (end-start)+1;
+
+        response.statusCode = 206;
+        response.setHeader('Content-Range', 'bytes ' + start + '-' + end + '/' + total);
+        response.setHeader('Accept-Ranges', 'bytes');
+        response.setHeader('Content-Length', chunksize);
+        response.body = fs.createReadStream(filePath, {start: start, end: end});
+        return;
+    }
+    response.setHeader('Content-Length', total);
+    response.statusCode = 200;
+    response.body = fs.createReadStream(filePath);
+};
+
+
+
 
 module.exports = Home;

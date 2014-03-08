@@ -6,7 +6,13 @@
     <ul>
     {% for media in medias %}
         <li>
-            <a href="{{ media.normalizedUrl }}" class="fancybox-thumb" rel="fancybox-thumb" title="{{ media.name }}">
+            <a href="{{ media.normalizedUrl }}" 
+                {% if media.type === 'image' %}
+                class="media-image" 
+                {% elseif media.type === 'video' %}
+                class="media-video" 
+                {% endif %}
+                title="{{ media.name }}">
                 <img src="{{ media.thumbnailUrl }}" alt="{{ media.name }}"/>
             </a>
         </li>

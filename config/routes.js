@@ -6,17 +6,30 @@ module.exports = [
         action: 'index'
     },
     {
-        id: 'thumbnail',
-        url: '/thumbnail/:file',
+        id: 'imageThumbnail',
+        url: '/image/thumbnail/:file',
         controller: '@website.controllers.Home',
-        action: 'thumbnail'
+        action: 'imageThumbnail'
     },
     {
         id: 'imageNormalized',
         url: '/image/normalized/:file',
         controller: '@website.controllers.Home',
         action: 'imageNormalized'
+    },
+    {
+        id: 'videoThumbnail',
+        url: '/video/thumbnail/:file',
+        controller: '@website.controllers.Home',
+        action: 'videoThumbnail'
+    },
+    {
+        id: 'videoNormalized',
+        url: '/video/normalized/:file',
+        controller: '@website.controllers.Home',
+        action: 'videoNormalized'
     }
+
 
 
 ];
