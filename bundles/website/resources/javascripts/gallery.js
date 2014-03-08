@@ -17,7 +17,7 @@ $(document).ready(function() {
         var url = target.attr('href');
         target.fancybox({
             type: 'html',
-            content: '<video controls="controls" width="100%" height="100%">' +
+            content: '<video src="' + url + '" controls="controls" width="100%" height="100%">' +
                 '<source src="' + url + '" type="video/mp4"/>' +
                 '<object width="200" height="200" type="video/quicktime" data="' + url + '">' +
                     '<param name="src" value="' + url + '"/>' +

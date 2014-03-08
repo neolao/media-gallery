@@ -269,6 +269,9 @@ proto.videoNormalized = function*(request, response)
 
         var start = parseInt(partialstart, 10);
         var end = partialend ? parseInt(partialend, 10) : total-1;
+        if (start > end ) {
+            start = end;
+        }
         var chunksize = (end-start)+1;
 
         response.statusCode = 206;

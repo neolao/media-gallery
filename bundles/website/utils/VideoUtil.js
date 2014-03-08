@@ -109,7 +109,7 @@ module.exports.createNormalized = function(filePath, extension)
             break;
     }
     command += ' -vprofile baseline';
-    command += ' -preset slow';
+    command += ' -preset fast';
     command += ' -b:v 250k';
     command += ' -maxrate 250k';
     command += ' -bufsize 500k';
