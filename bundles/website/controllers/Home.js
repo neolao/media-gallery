@@ -193,8 +193,8 @@ proto.videoThumbnail = function*(request, response)
     var thumbnailPath = ImageUtil.getThumbnailPath(filePath);
     var thumbnailExists = yield solfege.util.Node.fs.exists(thumbnailPath);
     if (isChanged || !thumbnailExists) {
-        var capturePath = yield VideoUtil.createThumbnail(filePath);
-        thumbnailPath = yield ImageUtil.createThumbnail(capturePath);
+        var thumbnailPath = yield VideoUtil.createThumbnail(filePath);
+        yield ImageUtil.autoOrient(thumbnailPath);
     }
 
     // Serve the file
