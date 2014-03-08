@@ -65,7 +65,8 @@ proto.index = function*(request, response)
                 medias.push({
                     name: fileName,
                     type: 'video',
-                    normalizedUrl: '/video/normalized/' + file,
+                    mp4Url: '/video/normalized/' + file + '.mp4',
+                    ogvUrl: '/video/normalized/' + file + '.ogv',
                     thumbnailUrl: '/video/thumbnail/' + file
                 });
                 break;
@@ -213,10 +214,14 @@ proto.videoThumbnail = function*(request, response)
 proto.videoNormalized = function*(request, response)
 {
     var pathResolve = require('path').resolve;
+    var pathBasename = require('path').basename;
+    var pathExtname = require('path').extname;
     var solfege = require('solfegejs');
 
     var file = decodeURIComponent(request.parameters.file);
-    var filePath = pathResolve(this.mediaDirectory, file);
+    var extension = pathExtname(file);
+    var fileName = pathBasename(file, extension);
+    var filePath = pathResolve(this.mediaDirectory, fileName);
 
     // Check if the media exists
     var fileExists = yield solfege.util.Node.fs.exists(filePath);
@@ -230,16 +235,33 @@ proto.videoNormalized = function*(request, response)
     var isChanged = yield FileUtil.isChanged(filePath);
 
 
+    // Create the normalized video if necessary
+    var VideoUtil = require('../utils/VideoUtil');
+    var normalizedPath = VideoUtil.getNormalizedPath(filePath, extension);
+    var normalizedExists = yield solfege.util.Node.fs.exists(normalizedPath);
+    if (isChanged || !normalizedExists) {
+        yield VideoUtil.createNormalized(filePath, extension);
+    }
+
+
+
+    // Get the file size
+    var stat = yield solfege.util.Node.fs.stat(normalizedPath);
+    var total = stat.size;
 
     // Serve the file
     var fs = require('fs');
-    response.setHeader('Content-Type', 'video/quicktime');
-    //response.body = fs.createReadStream(filePath);
-
-    var stat = yield solfege.util.Node.fs.stat(filePath);
-    var total = stat.size;
-
     var range = request.getHeader('range');
+    switch (extension) {
+        case '.mp4':
+            response.setHeader('Content-Type', 'video/mp4');
+            break;
+        case '.ogv':
+            response.setHeader('Content-Type', 'video/ogv');
+            break;
+        default:
+            response.setHeader('Content-Type', 'video/quicktime');
+    }
     if (range) {
         var parts = range.replace(/bytes=/, '').split('-');
         var partialstart = parts[0];
@@ -253,12 +275,12 @@ proto.videoNormalized = function*(request, response)
         response.setHeader('Content-Range', 'bytes ' + start + '-' + end + '/' + total);
         response.setHeader('Accept-Ranges', 'bytes');
         response.setHeader('Content-Length', chunksize);
-        response.body = fs.createReadStream(filePath, {start: start, end: end});
+        response.body = fs.createReadStream(normalizedPath, {start: start, end: end});
         return;
     }
     response.setHeader('Content-Length', total);
     response.statusCode = 200;
-    response.body = fs.createReadStream(filePath);
+    response.body = fs.createReadStream(normalizedPath);
 };
 
 

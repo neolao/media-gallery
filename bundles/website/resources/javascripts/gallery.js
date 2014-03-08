@@ -16,16 +16,18 @@ $(document).ready(function() {
     var generateFancyboxVideo = function(target) {
         var url = target.attr('href');
         target.fancybox({
-            content: '<video src="' + url + '" controls width="100%" height="100%"></video>',
+            type: 'html',
+            content: '<video controls="controls" width="100%" height="100%">' +
+                '<source src="' + url + '" type="video/mp4"/>' +
+                '<object width="200" height="200" type="video/quicktime" data="' + url + '">' +
+                    '<param name="src" value="' + url + '"/>' +
+                '</object>' +
+            '</video>',
             prevEffect  : 'none',
             nextEffect  : 'none',
             helpers : {
                 title   : {
                     type: 'inside'
-                },
-                thumbs  : {
-                    width   : 100,
-                    height  : 100
                 }
             }
         });

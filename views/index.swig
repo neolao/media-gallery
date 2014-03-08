@@ -6,11 +6,13 @@
     <ul>
     {% for media in medias %}
         <li>
-            <a rel="medias" href="{{ media.normalizedUrl }}" 
+            <a rel="medias" 
                 {% if media.type === 'image' %}
-                class="media-image" 
+                    class="media-image" 
+                    href="{{ media.normalizedUrl }}" 
                 {% elseif media.type === 'video' %}
-                class="media-video" 
+                    class="media-video" 
+                    href="{{ media.mp4Url }}" 
                 {% endif %}
                 title="{{ media.name }}">
                 <img src="{{ media.thumbnailUrl }}" alt="{{ media.name }}"/>
