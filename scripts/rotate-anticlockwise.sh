@@ -1,4 +1,4 @@
 #!/bin/bash
 
-convert -rotate -90 $1 $1
+convert -rotate -90 "$1" "$1"
 
