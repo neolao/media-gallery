@@ -130,6 +130,7 @@ module.exports.createNormalized = function(filePath, extension)
     command += ' -ar 16000';
     command += ' -r 13';
     command += ' -ab 32000';
+    command += ' -vprofile baseline';
     command += ' -vf scale=-1:360';
     command += ' "' + destinationPath + '"';
 

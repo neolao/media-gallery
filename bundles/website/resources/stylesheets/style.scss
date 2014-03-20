@@ -27,6 +27,9 @@ img {
     display: inline-block;
 }
 
+.fancybox-inner {
+    overflow: hidden !important;
+}
 .media-video {
     position: relative;
     display: block;

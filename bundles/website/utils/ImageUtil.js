@@ -41,10 +41,32 @@ module.exports.getNormalizedPath = function(mediaPath)
 module.exports.getInformations = function(mediaPath)
 {
     var easyimage = require('easyimage');
+    var exec = require('child_process').exec;
+    var command = 'identify -format "%m %z %w %h %b %x %f" "' + mediaPath + '"';
 
     return function(done) {
-        easyimage.info(filePath, function(error, result) {
-            done(error, result);
+        exec(command, function(error, stdout, stderr) {
+
+            if (stderr.match(/^identify:/)) {
+                done(new Error('Unsupported image'));
+            } else {
+                var temp = stdout.replace('PixelsPerInch', '').split(' ');
+
+                if (temp.length < 7) {
+                    done(new Error('Unsupported image'));
+                } else {
+                    var info     = {};
+                    info.type    = temp[0];
+                    info.depth   = parseInt(temp[1]);
+                    info.width   = parseInt(temp[2]);
+                    info.height  = parseInt(temp[3]);
+                    info.size    = parseInt(temp[4]);
+                    info.density = parseFloat(temp[5]);
+                    info.name    = temp.slice(6).join(' ').replace(/(\r\n|\n|\r)/gm,'');
+
+                    done(null, info);
+                }
+            }
         });
     };
 };
@@ -57,7 +79,7 @@ module.exports.getInformations = function(mediaPath)
 module.exports.autoOrient = function(filePath)
 {
     var exec = require('child_process').exec;
-    var command = 'mogrify -auto-orient ' + filePath;
+    var command = 'mogrify -auto-orient "' + filePath + '"';
 
     return function(done) {
         exec(command, function(error, stdout, stderr) {
@@ -74,17 +96,17 @@ module.exports.autoOrient = function(filePath)
  */
 module.exports.createThumbnail = function(mediaPath)
 {
-    var easyimage = require('easyimage');
-
+    var self = this;
     var destinationPath = this.getThumbnailPath(mediaPath);
+    var exec = require('child_process').exec;
 
     return function(done) {
-        easyimage.thumbnail({
-            src: mediaPath,
-            dst: destinationPath,
-            width: 100
-        }, function(error, result) {
-            done(error, destinationPath);
+        var promise = self.getInformations(mediaPath);
+        promise(function(error, informations) {
+            var command = 'convert "' + mediaPath + '" -auto-orient -crop ' + informations.width + 'x' + informations.height + '+0+0 -resize 100x100 -gravity Center "' + destinationPath + '"';
+            exec(command, function(error, stdout, stderr) {
+                done(null, destinationPath);
+            });
         });
     };
 };
@@ -97,17 +119,14 @@ module.exports.createThumbnail = function(mediaPath)
  */
 module.exports.createNormalized = function(mediaPath)
 {
-    var easyimage = require('easyimage');
-
-    var destinationPath = this.getNormalizedPath(mediaPath);
+    var self = this;
+    var destinationPath = this.getThumbnailPath(mediaPath);
+    var exec = require('child_process').exec;
+    var command = 'convert "' + mediaPath + '" -auto-orient -geometry 800x "' + destinationPath + '"';
 
     return function(done) {
-        easyimage.resize({
-            src: mediaPath,
-            dst: destinationPath,
-            width: 800
-        }, function(error, result) {
-            done(error, destinationPath);
+        exec(command, function(error, stdout, stderr) {
+            done(null, destinationPath);
         });
     };
 };

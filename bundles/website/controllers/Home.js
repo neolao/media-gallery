@@ -112,7 +112,6 @@ proto.imageThumbnail = function*(request, response)
     var thumbnailExists = yield solfege.util.Node.fs.exists(thumbnailPath);
     if (isChanged || !thumbnailExists) {
         thumbnailPath = yield ImageUtil.createThumbnail(filePath);
-        yield ImageUtil.autoOrient(thumbnailPath);
     }
 
     // Serve the file
@@ -153,7 +152,6 @@ proto.imageNormalized = function*(request, response)
     var normalizedExists = yield solfege.util.Node.fs.exists(normalizedPath);
     if (isChanged || !normalizedExists) {
         normalizedPath = yield ImageUtil.createNormalized(filePath);
-        yield ImageUtil.autoOrient(normalizedPath);
     }
 
     // Serve the file
