@@ -120,7 +120,7 @@ module.exports.createThumbnail = function(mediaPath)
 module.exports.createNormalized = function(mediaPath)
 {
     var self = this;
-    var destinationPath = this.getThumbnailPath(mediaPath);
+    var destinationPath = this.getNormalizedPath(mediaPath);
     var exec = require('child_process').exec;
     var command = 'convert "' + mediaPath + '" -auto-orient -geometry 800x "' + destinationPath + '"';
 
