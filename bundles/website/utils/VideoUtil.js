@@ -139,6 +139,10 @@ module.exports.createNormalized = function(filePath, extension)
             command += ' -ac 1';
             command += ' -ar 16000';
             command += ' -ab 32000';
+            //command += ' -b 3900k';
+            //command += ' -ar 44100';
+            //command += ' -ac 2';
+            //command += ' -ab 128k';
             command += ' -vf scale=-1:360';
             command += ' -f webm';
             command += ' -y';
