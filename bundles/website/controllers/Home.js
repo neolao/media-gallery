@@ -67,6 +67,7 @@ proto.index = function*(request, response)
                     type: 'video',
                     mp4Url: '/video/normalized/' + file + '.mp4',
                     ogvUrl: '/video/normalized/' + file + '.ogv',
+                    webmUrl: '/video/normalized/' + file + '.webm',
                     thumbnailUrl: '/video/thumbnail/' + file
                 });
                 break;
@@ -256,6 +257,9 @@ proto.videoNormalized = function*(request, response)
             break;
         case '.ogv':
             response.setHeader('Content-Type', 'video/ogv');
+            break;
+        case '.webm':
+            response.setHeader('Content-Type', 'video/webm');
             break;
         default:
             response.setHeader('Content-Type', 'video/quicktime');

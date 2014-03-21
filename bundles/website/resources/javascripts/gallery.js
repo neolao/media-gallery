@@ -15,10 +15,12 @@ $(document).ready(function() {
 
     var generateFancyboxVideo = function(target) {
         var url = target.attr('href');
+        var webm = target.data('webm');
         target.fancybox({
             type: 'html',
             content: '<video src="' + url + '" controls="controls" width="100%" height="100%">' +
                 '<source src="' + url + '" type="video/mp4"/>' +
+                '<source src="' + webm + '" type="video/webm"/>' +
                 '<object width="200" height="200" type="video/quicktime" data="' + url + '">' +
                     '<param name="src" value="' + url + '"/>' +
                 '</object>' +

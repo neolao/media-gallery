@@ -102,36 +102,48 @@ module.exports.createNormalized = function(filePath, extension)
         case '.mp4':
             command += ' -vcodec libx264';
             command += ' -acodec libvo_aacenc';
+            command += ' -b 384k';
+            command += ' -flags +loop+mv4';
+            command += ' -cmp 256';
+            command += ' -partitions +parti4x4+parti8x8+partp4x4+partp8x8';
+            command += ' -subq 6';
+            command += ' -trellis 0';
+            command += ' -refs 5';
+            command += ' -bf 0';
+            command += ' -flags2 +mixed_refs';
+            command += ' -coder 0';
+            command += ' -me_range 16';
+            command += ' -g 250';
+            command += ' -keyint_min 25';
+            command += ' -sc_threshold 40';
+            command += ' -i_qfactor 0.71';
+            command += ' -qmin 10 -qmax 51';
+            command += ' -qdiff 4';
+            command += ' -acodec libvo_aacenc';
+            command += ' -ac 1';
+            command += ' -ar 16000';
+            command += ' -r 13';
+            command += ' -ab 32000';
+            command += ' -vprofile baseline';
+            command += ' -vf scale=-1:360';
             break;
         case '.ogv':
             command += ' -vcodec libtheora';
             command += ' -acodec libvorbis';
             break;
+        case '.webm':
+            command += ' -preset libvpx';
+            command += ' -acodec libvorbis';
+            command += ' -threads 8';
+            command += ' -b 384k';
+            command += ' -ac 1';
+            command += ' -ar 16000';
+            command += ' -ab 32000';
+            command += ' -vf scale=-1:360';
+            command += ' -f webm';
+            command += ' -y';
+            break;
     }
-    command += ' -b 384k';
-    command += ' -flags +loop+mv4';
-    command += ' -cmp 256';
-    command += ' -partitions +parti4x4+parti8x8+partp4x4+partp8x8';
-    command += ' -subq 6';
-    command += ' -trellis 0';
-    command += ' -refs 5';
-    command += ' -bf 0';
-    command += ' -flags2 +mixed_refs';
-    command += ' -coder 0';
-    command += ' -me_range 16';
-    command += ' -g 250';
-    command += ' -keyint_min 25';
-    command += ' -sc_threshold 40';
-    command += ' -i_qfactor 0.71';
-    command += ' -qmin 10 -qmax 51';
-    command += ' -qdiff 4';
-    command += ' -acodec libvo_aacenc';
-    command += ' -ac 1';
-    command += ' -ar 16000';
-    command += ' -r 13';
-    command += ' -ab 32000';
-    command += ' -vprofile baseline';
-    command += ' -vf scale=-1:360';
     command += ' "' + destinationPath + '"';
 
     return function(done) {

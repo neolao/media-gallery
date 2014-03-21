@@ -13,6 +13,7 @@
                 {% elseif media.type === 'video' %}
                     class="media-video" 
                     href="{{ media.mp4Url }}" 
+                    data-webm="{{ media.webmUrl }}" 
                 {% endif %}
                 title="{{ media.name }}">
                 <img src="{{ media.thumbnailUrl }}" alt="{{ media.name }}"/>
