@@ -34,6 +34,10 @@ img {
     position: relative;
     display: block;
 
+    img {
+        height: 100px;
+    }
+
     &:before {
         content: "";
         display: block;
