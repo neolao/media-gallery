@@ -103,7 +103,16 @@ module.exports.createThumbnail = function(mediaPath)
     return function(done) {
         var promise = self.getInformations(mediaPath);
         promise(function(error, informations) {
-            var command = 'convert "' + mediaPath + '" -auto-orient -crop ' + informations.width + 'x' + informations.height + '+0+0 -resize 100x100 -gravity Center "' + destinationPath + '"';
+
+            if (informations.width < informations.height) {
+                var resizeWidth = "100";
+                var resizeHeight = "";
+            } else {
+                var resizeWidth = "";
+                var resizeHeight = "100";
+            }
+
+            var command = 'convert "' + mediaPath + '" -strip -resize ' + resizeWidth + 'x' + resizeHeight + ' -gravity Center -crop 100x100+0+0 "' + destinationPath + '"';
             exec(command, function(error, stdout, stderr) {
                 done(null, destinationPath);
             });
